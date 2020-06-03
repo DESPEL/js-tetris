@@ -58,20 +58,28 @@ class Tetromino {
         this.addPauseListener()
     }
 
+    pauseHandler(e) {
+        if (e.keyCode != 32) {
+            return
+        }
+        if (!this.paused) {
+            this.pause()
+            console.log('paused')
+        } else {
+            this.resume()
+            console.log('unpaused')
+        }
+    }
+
+    getPauseHandler() {
+        let handler = (e) => this.pauseHandler(e)
+        this.removePauseHandler = () => document.removeEventListener('keypress', handler)
+        return handler
+    }
+
     addPauseListener() {
         this.paused = false
-        document.addEventListener('keypress', (e) => {
-            if (e.keyCode != 32) {
-                return
-            }
-            if (!this.paused) {
-                this.pause()
-                console.log('paused')
-            } else {
-                this.resume()
-                console.log('unpaused')
-            }
-        })
+        document.addEventListener('keypress', this.getPauseHandler())
     }
 
     kbHandler(e) {
@@ -110,6 +118,7 @@ class Tetromino {
     stop() {
         clearInterval(this.moveDownInterval)
         this.removeKbHandler()
+        this.removePauseHandler()
 
         let board = getBoard()
         for (let i = 0; i < this.blocks.length; i++) {
