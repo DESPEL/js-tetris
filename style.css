@@ -1,0 +1,11 @@
+.block {
+    width: 4vh;
+    height: 4vh;
+    background-color: antiquewhite;
+    border: solid 1px gray;
+}
+
+.game_row {
+    display: flex;
+    justify-content: center;
+}
