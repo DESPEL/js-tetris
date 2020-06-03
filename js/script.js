@@ -1,89 +1,46 @@
-const DEFAULT_COLOR = "antiquewhite"
-const ACTIVE = 'active'
-const CURRENT = 'current'
-
-function startGame() {
-    const board = document.getElementById('board')
-    if (board.childElementCount > 0)
-        setupBoard()
-    return
-}
-
-function tetrominoMove() {
-    tetromino = getRandomTetromino()
-}
-
-function run() {}
-
-
-const keyHandlers = {
-    40: (tetromino) => moveDown(tetromino),
-    37: (tetromino) => moveLeft(tetromino),
-    39: (tetromino) => moveRight(tetromino),
-    38: (tetromino) => rotate(tetromino),
-    13: (tetromino) => instaFloor(tetromino)
-}
-
-function callKeyHandler(tetromino, keyCode) {
-    const keyHandler = keyHandlers[keyCode]
-    if (keyHandler !== undefined) {
-        keyHandler(tetromino)
+function tetrominoCrazy() {
+    let tetromino = getRandomTetromino(tetrominoCrazy)
+    if (overlaps(tetromino.position.x, tetromino.position.y, tetromino.blocks)) {
+        console.log('You noob')
+        return
     }
+
+    checkRows()
+    tetromino.initListeners()
 }
 
-function getKeydownHandler(tetromino, renderTetromino) {
-
-    function handler(event) {
-        callKeyHandler(tetromino, event.keyCode)
-        renderTetromino()
-        if (tetromino.frozen) {
-            document.removeEventListener('keydown', handler)
-            tetromino.freeze()
+function checkRows() {
+    let rows = document.getElementById('board').children
+    for (let i = 0; i < rows.length; i++) {
+        let row = rows[i]
+        let rowItems = row.children
+        let great = true
+        for (let j = 0; j < rowItems.length; j++) {
+            let block = rowItems[j]
+            if (!block.classList.contains(ACTIVE)) {
+                great = false
+            }
+        }
+        if (great) {
+            row.remove()
+            getBoard().splice(i)
+            createNewRow()
         }
     }
-    return handler
 }
 
-function generateDropManager(tetromino, renderTetromino) {
-    let controller = undefined
-
-    function dropManager() {
-        if (tetromino.frozen) {
-            setTimeout(tetrominoLife(), 0)
-            return
-        }
-        moveDown(tetromino)
-        renderTetromino()
-        controller = setTimeout(dropManager, 1000)
+function createNewRow() {
+    let board = document.getElementById('board')
+    let row = document.createElement('div')
+    row.classList.add('game_row')
+    let a_row = []
+    for (let j = 0; j < COLUMNS; j++) {
+        cell = document.createElement('div')
+        cell.classList.add('block')
+        row.appendChild(cell)
+        a_row.push(cell)
     }
-    controller = setTimeout(dropManager, 1000)
-    return dropManager
+    board.insertBefore(row, board.firstChild)
+    getBoard().unshift(a_row)
 }
-
-function spawnTetromino() {
-    let tetromino = getRandomTetromino()
-    const pos = tetromino.getPosition()
-    if (overlaps(pos.x, pos.y, tetromino.getBlocks())) {
-        return false
-    }
-    return tetromino
-}
-
-function tetrominoLife() {
-    let tetromino = spawnTetromino()
-
-    const renderTetromino = getTetrominoRenderer(tetromino)
-    renderTetromino()
-
-
-    const keyDownHandler = getKeydownHandler(tetromino, renderTetromino)
-    document.addEventListener('keydown', keyDownHandler)
-    generateDropManager(tetromino, renderTetromino)
-    return true
-}
-
-function run() {
-    tetrominoLife()
-}
-
-run()
+tetrominoCrazy()
