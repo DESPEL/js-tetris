@@ -5,6 +5,20 @@ function setupBoard() {
     let m_board = []
 
     const board = document.getElementById('board')
+    for (let i = 0; i < 2; i++) {
+        row = document.createElement('div')
+        row.classList.add('game_row')
+        row.style.display = "none"
+        let a_row = []
+        for (let j = 0; j < COLUMNS; j++) {
+            cell = document.createElement('div')
+            cell.classList.add('block')
+            row.appendChild(cell)
+            a_row.push(cell)
+        }
+        board.appendChild(row)
+        m_board.push(a_row)
+    }
     for (let i = 0; i < ROWS; i++) {
         row = document.createElement('div')
         row.classList.add('game_row')

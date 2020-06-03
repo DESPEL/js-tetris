@@ -40,7 +40,8 @@ function createNewRow() {
         row.appendChild(cell)
         a_row.push(cell)
     }
-    board.insertBefore(row, board.firstChild)
-    getBoard().unshift(a_row)
+    console.log(board.children)
+    board.insertBefore(row, board.children[2])
+    getBoard().splice(2, 0, a_row);
 }
 tetrominoCrazy()
