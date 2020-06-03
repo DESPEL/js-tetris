@@ -54,6 +54,24 @@ class Tetromino {
         this.frozen = false
         this.color = color
         this.stopHandler = stopCallback
+
+        this.addPauseListener()
+    }
+
+    addPauseListener() {
+        this.paused = false
+        document.addEventListener('keypress', (e) => {
+            if (e.keyCode != 32) {
+                return
+            }
+            if (!this.paused) {
+                this.pause()
+                console.log('paused')
+            } else {
+                this.resume()
+                console.log('unpaused')
+            }
+        })
     }
 
     kbHandler(e) {
@@ -104,6 +122,17 @@ class Tetromino {
         }
 
         this.stopHandler()
+    }
+
+    pause() {
+        this.paused = true
+        clearInterval(this.moveDownInterval)
+        this.removeKbHandler()
+    }
+
+    resume() {
+        this.paused = false
+        this.initListeners()
     }
 
     instaFloor() {
