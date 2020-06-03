@@ -1,7 +1,7 @@
 function tetrominoCrazy() {
     let tetromino = getRandomTetromino(tetrominoCrazy)
     if (overlaps(tetromino.position.x, tetromino.position.y, tetromino.blocks)) {
-        console.log('You noob')
+        alert("OH NO, Bad Player")
         return
     }
 
@@ -25,6 +25,10 @@ function checkRows() {
             row.remove()
             getBoard().splice(i)
             createNewRow()
+
+            points = parseInt(document.getElementById('points').textContent)
+            points += 100
+            document.getElementById('points').textContent = points
         }
     }
 }

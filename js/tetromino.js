@@ -109,9 +109,15 @@ class Tetromino {
         }
     }
 
+    getSpeed() {
+        let points = parseInt(document.getElementById('points').textContent)
+        return 1000 - ((-1000 / (points / 500 + 1)) + 1000)
+    }
+
     initListeners() {
         this.render()
-        this.moveDownInterval = setInterval(this.getIntervalHandler(), 1000)
+        const speed = this.getSpeed()
+        this.moveDownInterval = setInterval(this.getIntervalHandler(), speed)
         document.addEventListener("keydown", this.getKbHandler())
     }
 
@@ -148,7 +154,7 @@ class Tetromino {
         while (this.moveDown()) {}
     }
 
-    rotate() { // TODO: Finish rotation
+    rotate() {
         this.renderableTask(this.rotationHelper)
     }
     rotationHelper() {
